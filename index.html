@@ -1,11 +1,45 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Exportar a Excel</title>
-    <link rel="stylesheet" type="text/css" href="styles.css">
+    <title>Sistema de Registro de Venta de Pasteles</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-    <h2>Exportar a Excel</h2>
+    <h2>Registro de Venta de Pasteles</h2>
+    <form id="order-form">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" required><br>
+
+        <label for="direccion">Dirección de Entrega:</label>
+        <input type="text" id="direccion" name="direccion" required><br>
+
+        <label for="telefono">Número de Teléfono:</label>
+        <input type="text" id="telefono" name="telefono" required><br>
+
+        <label for="email">Correo Electrónico:</label>
+        <input type="email" id="email" name="email" required><br>
+
+        <label for="pastel">Selecciona un Pastel:</label>
+        <select id="pastel" name="pastel" required>
+            <option value="pastel1">Pastel de Chocolate</option>
+            <option value="pastel2">Pastel de Fresa</option>
+            <!-- Agrega más opciones de pasteles aquí -->
+        </select><br>
+
+        <label for="cantidad">Cantidad:</label>
+        <input type="number" id="cantidad" name="cantidad" min="1" required><br>
+
+        <label for="notas">Instrucciones Especiales:</label>
+        <textarea id="notas" name="notas" rows="4" cols="50"></textarea><br>
+
+        <label for="metodo_pago">Método de Pago:</label>
+        <input type="radio" id="tarjeta" name="metodo_pago" value="tarjeta"> Tarjeta de Crédito
+        <input type="radio" id="paypal" name="metodo_pago" value="paypal"> PayPal
+        <input type="radio" id="efectivo" name="metodo_pago" value="efectivo"> Efectivo<br>
+
+        <input type="submit" value="Enviar Pedido">
+    </form>
+
     <button id="exportButton">Exportar a Excel</button>
 
     <script src="script.js"></script>
