@@ -1,78 +1,62 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const form = document.getElementById("order-form");
-    const exportButton = document.getElementById("exportButton");
-    const orders = [];
+// Obtener referencias a elementos del formulario
+const fechaInput = document.getElementById("fecha");
+const nombreInput = document.getElementById("nombre");
+const pastelSelect = document.getElementById("pastel");
+const cantidadInput = document.getElementById("cantidad");
+const precioInput = document.getElementById("precio");
+const totalInput = document.getElementById("total");
+const registrarVentaButton = document.getElementById("registrarVenta");
 
-    form.addEventListener("submit", function (event) {
-        event.preventDefault();
+// Función para calcular el monto total
+function calcularTotal() {
+  const cantidad = parseInt(cantidadInput.value);
+  const precio = parseFloat(precioInput.value);
 
-        // Obtener datos del formulario
-        const nombre = document.getElementById("nombre").value;
-        const direccion = document.getElementById("direccion").value;
-        const telefono = document.getElementById("telefono").value;
-        const email = document.getElementById("email").value;
-        const pastel = document.getElementById("pastel").value;
-        const cantidad = document.getElementById("cantidad").value;
-        const notas = document.getElementById("notas").value;
-        const metodoPago = document.querySelector('input[name="metodo_pago"]:checked').value;
+  if (!isNaN(cantidad) && !isNaN(precio)) {
+    const total = cantidad * precio;
+    totalInput.value = total.toFixed(2); // Mostrar el total con 2 decimales
+  } else {
+    totalInput.value = "Invalido";
+  }
+}
 
-        // Guardar el pedido en el arreglo
-        orders.push({
-            nombre: nombre,
-            direccion: direccion,
-            telefono: telefono,
-            email: email,
-            pastel: pastel,
-            cantidad: cantidad,
-            notas: notas,
-            metodoPago: metodoPago,
-        });
+// Manejar el evento "Calcular Total" al hacer clic en el botón
+document.querySelector("button").addEventListener("click", calcularTotal);
 
-        // Limpiar el formulario
-        form.reset();
-    });
+// Manejar el evento "Registrar Venta" al hacer clic en el botón
+registrarVentaButton.addEventListener("click", function () {
+  const fecha = fechaInput.value;
+  const nombre = nombreInput.value;
+  const pastel = pastelSelect.options[pastelSelect.selectedIndex].text;
+  const cantidad = cantidadInput.value;
+  const precio = precioInput.value;
+  const total = totalInput.value;
 
-    exportButton.addEventListener("click", function () {
-        // Llamar a una función para exportar los datos a Excel
-        exportToExcel(orders);
-    });
+  // Crear una cadena de texto con los detalles de la venta
+  const ventaDetails = `
+    Fecha: ${fecha}
+    Nombre del Cliente: ${nombre}
+    Pastel: ${pastel}
+    Cantidad: ${cantidad}
+    Precio por Pastel: ${precio}
+    Monto Total: ${total}
+  `;
 
-    function exportToExcel(data) {
-        // Lógica para exportar datos a Excel
-        // Puedes utilizar una biblioteca como exceljs o xlsx para generar el archivo Excel.
-        // Ejemplo básico:
-        // Crear un libro de Excel, agregar hojas, agregar datos y generar un archivo.
+  // Mostrar una alerta con los detalles de la venta
+  alert("Detalles de la Venta:\n\n" + ventaDetails);
 
-        // Ejemplo utilizando exceljs:
-        const ExcelJS = require("exceljs");
-        const workbook = new ExcelJS.Workbook();
-        const worksheet = workbook.addWorksheet("Pedidos");
-        
-        // Agregar encabezados
-        worksheet.addRow(["Nombre", "Dirección", "Teléfono", "Email", "Pastel", "Cantidad", "Notas", "Método de Pago"]);
+  // Restablecer los valores de los campos a sus valores iniciales o vacíos
+  fechaInput.value = "";
+  nombreInput.value = "";
+  pastelSelect.selectedIndex = 0;
+  cantidadInput.value = "";
+  precioInput.value = "";
+  totalInput.value = "";
 
-        // Agregar datos
-        data.forEach(order => {
-            worksheet.addRow([
-                order.nombre,
-                order.direccion,
-                order.telefono,
-                order.email,
-                order.pastel,
-                order.cantidad,
-                order.notas,
-                order.metodoPago
-            ]);
-        });
-
-        // Guardar el archivo Excel
-        workbook.xlsx.writeBuffer().then(function (buffer) {
-            const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = "pedidos.xlsx";
-            a.click();
-        });
-    }
+  // Puedes personalizar esta parte para tu aplicación específica.
 });
+
+// Esta función se llama cuando se carga la página
+window.onload = function () {
+  calcularTotal(); // Calcular el total al cargar la página
+};
