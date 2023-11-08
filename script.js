@@ -60,3 +60,32 @@ registrarVentaButton.addEventListener("click", function () {
 window.onload = function () {
   calcularTotal(); // Calcular el total al cargar la página
 };
+function enviarVenta() {
+  // ... (código para calcular el monto total)
+
+  const xhr = new XMLHttpRequest();
+  xhr.open("POST", "registrar_venta.php", true);
+  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      alert("Venta registrada con éxito");
+      limpiarFormulario();
+    }
+  };
+
+  xhr.send(
+    "fecha=" +
+      fecha +
+      "&nombre=" +
+      nombre +
+      "&pastel=" +
+      pastel +
+      "&cantidad=" +
+      cantidad +
+      "&precio=" +
+      precio +
+      "&total=" +
+      total
+  );
+}
