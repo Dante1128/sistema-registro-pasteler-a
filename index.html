@@ -6,10 +6,8 @@
   </head>
   <body>
     <div id="container">
-            <h1> Registro de Ventas</h1>
-       
-        
-       
+      <h1> Registro de Ventas</h1>
+      
       <div class="form-group">
         <label for="fecha">Fecha de Venta:</label>
         <input type="date" id="fecha" />
@@ -34,10 +32,35 @@
 
       <label for="total">Monto Total:</label>
       <input type="text" id="total" readonly />
-      <button type="button" id="registrarVenta">Registrar Venta</button>
+      <button type="button" id="registrarVenta" onclick="registrarVenta()">Registrar Venta</button>
     </div>
 
     <script src="script.js"></script>
     <script src="registro.js"></script>
+    <script>
+      function registrarVenta() {
+        var fecha = document.getElementById('fecha').value;
+        var nombre = document.getElementById('nombre').value;
+        var pastel = document.getElementById('pastel').value;
+        var cantidad = document.getElementById('cantidad').value;
+        var precio = document.getElementById('precio').value;
+        var total = document.getElementById('total').value;
+
+        var venta = { fecha, nombre, pastel, cantidad, precio, total };
+
+        // Recupera el array de ventas de localStorage, o inicializa un array vacío si no existe
+        var ventas = JSON.parse(localStorage.getItem('ventas')) || [];
+
+        // Agrega la nueva venta al array de ventas
+        ventas.push(venta);
+
+        // Almacena el array de ventas actualizado en localStorage
+        localStorage.setItem('ventas', JSON.stringify(ventas));
+
+        window.location.href = 'index2.html';
+      }
+    </script>
   </body>
 </html>
+
+

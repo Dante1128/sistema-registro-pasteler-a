@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exportar a Excel</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="style2.css" />
+</head>
+<body>
+
+<h2>Formulario de Datos</h2>
+
+<table id="data-table" border="1">
+    <thead>
+        <tr>
+            <th>Fecha de Venta</th>
+            <th>Nombre del Cliente</th>
+            <th>Pastel</th>
+            <th>Cantidad</th>
+            <th>Precio por Pastel</th>
+            <th>Monto Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Aquí se agregarán las filas dinámicamente -->
+    </tbody>
+</table>
+
+<button onclick="exportToExcel('data-table')">Exportar a Excel</button>
+<button onclick="window.location.href='index.html'">Registrar Nueva Venta</button>
+
+<script>
+    function exportToExcel(tableID) {
+        const table = document.getElementById(tableID);
+        const rows = Array.from(table.getElementsByTagName('tr'));
+
+        const data = rows.map(row => {
+            const cells = Array.from(row.getElementsByTagName('td'));
+            const ths = Array.from(row.getElementsByTagName('th'));
+            return [...ths.map(th => th.innerText), ...cells.map(cell => cell.innerText)];
+        });
+
+        const worksheet = XLSX.utils.aoa_to_sheet(data);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Datos');
+
+        const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+        const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'datos.xlsx';
+        link.click();
+    }
+
+    window.onload = function() {
+        // Recupera el array de ventas de localStorage
+        var ventas = JSON.parse(localStorage.getItem('ventas')) || [];
+
+        var table = document.getElementById('data-table');
+
+        // Agrega una fila a la tabla para cada venta
+        ventas.forEach(function(venta) {
+            var row = table.insertRow(-1);
+            row.insertCell(0).innerHTML = venta.fecha;
+            row.insertCell(1).innerHTML = venta.nombre;
+            row.insertCell(2).innerHTML = venta.pastel === 'pastel1' ? 'Pastel de Chocolate' : 'Pastel de Fresa';
+            row.insertCell(3).innerHTML = venta.cantidad;
+            row.insertCell(4).innerHTML = venta.precio;
+            row.insertCell(5).innerHTML = venta.total;
+        });
+    }
+</script>
+
+</body>
+</html>
+
